@@ -39,11 +39,14 @@ def grid_hpx(healpix_data, header, beamsize):
     npix = hp.nside2npix(nside)
 
     if healpix_data.ndim == 1:
-        header['NAXIS3'] = 1
-        healpix_data = healpix_data[:, None]
-
+        h = header.copy()
+        h['NAXIS3'] = 1
+        d = healpix_data[:, None]
+    else:
+        h = header.copy()
+        d = healpix_data
     # set up the gridder and kernel
-    gridder = cygrid.WcsGrid(header)
+    gridder = cygrid.WcsGrid(h)
 
     # set kernel
     kernelsize_fwhm = 3. * beamsize
@@ -62,7 +65,7 @@ def grid_hpx(healpix_data, header, beamsize):
     lats = (90. - np.rad2deg(theta)).astype(np.float64)
 
     # grid
-    gridder.grid(lons, lats, healpix_data)
+    gridder.grid(lons, lats, d)
     datacube = gridder.get_datacube()
 
     return np.squeeze(datacube)

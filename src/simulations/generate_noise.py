@@ -10,7 +10,7 @@ def generate_noise(box, gal_priors, locations):
 
     shape = box['n_channels'], box['boxsize'], box['boxsize']
 
-    noise_cube = np.random.normal(loc=0, scale=1., size=shape)
+    noise_cube = np.random.normal(loc=0, scale=2., size=shape)
 
     return noise_cube
 

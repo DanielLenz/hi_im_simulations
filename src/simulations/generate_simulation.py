@@ -1,4 +1,5 @@
 import numpy as np
+from astropy.io import fits
 
 from src.features import box_params, gal_params, clustering, spectra, gridding
 from src.simulations import generate_signal
@@ -16,7 +17,8 @@ if __name__ == '__main__':
 
     # galaxy priors
     gal_priors = gal_params.get_simple_priors(
-        v_range=[box['velocity_grid'][0].value, box['velocity_grid'][-1].value],
+        v_range=[
+            box['velocity_grid'][0].value, box['velocity_grid'][-1].value],
         n_samples=n_samples)
 
     # clustering of the galaxies
@@ -36,6 +38,7 @@ if __name__ == '__main__':
     # generate components
     foregrounds = generate_foregrounds.generate_foregrounds(
         box, gal_priors, locations)
+    foregrounds *= 1000
     noise = generate_noise.generate_noise(
         box, gal_priors, locations)
     signal, catalogue = generate_signal.generate_signal(
@@ -43,8 +46,12 @@ if __name__ == '__main__':
 
     # final cube
     total_sim = signal + foregrounds + noise
+
+    # write to disk
     fits.writeto(
         outdir + 'total_sim.fits',
         total_sim,
-        header,
+        box['header'],
         clobber=True)
+
+    catalogue.writeto(outdir + 'catalogue.fits', clobber=True)

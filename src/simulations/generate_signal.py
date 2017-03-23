@@ -101,7 +101,4 @@ if __name__ == '__main__':
         clobber=True)
 
     # write to disk
-    fits.writeto(
-        outdir + 'catalogue.fits',
-        signal,
-        clobber=True)
+    catalogue.writeto(outdir + 'catalogue.fits', clobber=True)

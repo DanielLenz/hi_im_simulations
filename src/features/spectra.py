@@ -28,7 +28,12 @@ def generate_spectra(gal_params, ra, dec, velocity_grid, v_rad):
             skewness=gal_params['skewness'][i])
         specs.append(spectrum.spectrum)
 
-    return np.array(specs)
+    specs = np.array(specs)
+
+    print(velocity_grid)
+    print(v_rad)
+    print(np.argmax(specs, 1))
+    return specs
 
 
 class Spectrum(object):
@@ -43,6 +48,7 @@ class Spectrum(object):
             velo_center, flux, v_rot, turb_velo, solid_rot, skewness):
 
         self.velos = velos
+        self.velo_center = velo_center
         self.flux = flux
         self.logflux = np.log10(self.flux)
         self.v_rot = v_rot
@@ -68,6 +74,7 @@ class Spectrum(object):
         if self._shape_parameters is None:
             self._shape_parameters = np.array([
                 self.logflux,
+                self.velo_center,
                 self.v_rot,
                 self.turb_velo,
                 self.solid_rot,

@@ -16,22 +16,30 @@ def create_header(box):
 
     header['CDELT1'] = box['pixsize'].value
     header['CDELT2'] = box['pixsize'].value
-    header['CDELT3'] = box['delta_v'].value
+    header['CDELT3'] = -box['delta_nu'].value
 
     header['CRPIX1'] = 0
     header['CRPIX2'] = 0
     header['CRPIX3'] = 0
 
+    header['CUNIT1'] = 'deg'
+    header['CUNIT2'] = 'deg'
+    header['CUNIT3'] = 'Hz'
+
     header['CRVAL1'] = box['ra_min'].value
     header['CRVAL2'] = box['dec_min'].value
-    header['CRVAL3'] = box['velocity_grid'][0].value
+    header['CRVAL3'] = box['nus'][0].value
     header['LATPOLE'] = 90.
 
     header['CTYPE1'] = 'RA---SFL'
     header['CTYPE2'] = 'DEC--SFL'
-    header['CTYPE3'] = 'VRAD'
+    header['CTYPE3'] = 'FREQ'
 
     return header
+
+
+def parkes_type():
+    ...
 
 
 def get_test_params():
@@ -49,18 +57,17 @@ def get_test_params():
 
     # spectral
     z_start = 0.01  # redshift start
-    bandwidth = 1. * u.MHz  # bandwidth in MHz
+    bandwidth = (100 * u.MHz).to(u.Hz)  # bandwidth in MHz
     nu_start = P.HI_RESTFREQ / (1. + z_start)
     n_channels = 512  # 512 spectral channels
     # delta_nu = 10. * u.kHz  # spacing in frequency
     delta_nu = bandwidth / n_channels  # spacing in frequency
 
-    # get frequencies
+    # get frequencies, high to low freqs, meaning increasing redshift
     nus = np.linspace(
         nu_start.to(u.Hz).value,
-        (nu_start + n_channels * delta_nu).to(u.Hz).value,
+        (nu_start - n_channels * delta_nu).to(u.Hz).value,
         n_channels) * u.Hz
-    nus = nus[::-1]  # high to low freqs, meaning increasing redshift
 
     # convert to v_lsr in km/s
     velocity_grid = nus.to(u.km / u.s, equivalencies=P.HI_VFRAME)

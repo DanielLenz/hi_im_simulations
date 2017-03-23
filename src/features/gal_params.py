@@ -30,8 +30,8 @@ def get_simple_priors(v_range, n_samples=1):
     # rotation velocities
     inclination = np.random.uniform(0, 360., n_samples)
     rot_velos = stats.norm.rvs(loc=200, scale=50, size=n_samples)
-    rot_velos = np.clip(rot_velos, a_min=50., a_max=None)
-    eff_rot_velos = rot_velos * np.sin(np.radians(inclination))
+    eff_rot_velos = np.abs(rot_velos * np.sin(np.radians(inclination)))
+    eff_rot_velos = np.clip(eff_rot_velos, a_min=50., a_max=None)
 
     # skewness, has to be within [-1, 1]
     skewness = stats.norm.rvs(loc=0, scale=0.3, size=n_samples)
