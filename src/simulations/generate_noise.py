@@ -15,7 +15,7 @@ def generate_noise(box, gal_priors, locations):
     return noise_cube
 
 
-if __name__ == '__main__':
+def main():
     outdir = 'simulations/simple/'
 
     n_samples = int(200)
@@ -52,3 +52,7 @@ if __name__ == '__main__':
         noise_cube,
         box['header'],
         clobber=True)
+
+
+if __name__ == '__main__':
+    main()

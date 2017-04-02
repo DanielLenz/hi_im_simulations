@@ -46,7 +46,7 @@ def generate_foregrounds(box, gal_priors, locations):
     return foregrounds
 
 
-if __name__ == '__main__':
+def main():
     outdir = 'simulations/simple/'
 
     n_samples = int(200)
@@ -86,3 +86,7 @@ if __name__ == '__main__':
         foregrounds,
         box['header'],
         clobber=True)
+
+
+if __name__ == '__main__':
+    main()

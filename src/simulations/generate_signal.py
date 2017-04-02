@@ -62,10 +62,10 @@ def generate_signal(box, gal_priors, locations):
     return signal, catalogue
 
 
-if __name__ == '__main__':
+def main():
     outdir = 'simulations/simple/'
 
-    n_samples = int(20)
+    n_samples = int(1e5)
 
     # catalogue input
     # box properties
@@ -102,3 +102,7 @@ if __name__ == '__main__':
 
     # write to disk
     catalogue.writeto(outdir + 'catalogue.fits', clobber=True)
+
+
+if __name__ == '__main__':
+    main()
