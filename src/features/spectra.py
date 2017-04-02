@@ -14,6 +14,9 @@ def generate_spectra(gal_params, ra, dec, velocity_grid, v_rad):
     # print(gal_params)
     # print(ra, dec, velocity_grid, v_rad)
     # return
+
+    linemodel = LineModel(velocity_grid, n_disks=1, n_baseline=0)
+
     specs = []
     for i in range(n_samples):
         spectrum = Spectrum(
@@ -25,14 +28,12 @@ def generate_spectra(gal_params, ra, dec, velocity_grid, v_rad):
             v_rot=gal_params['v_rot'][i],
             turb_velo=gal_params['turb_velo'][i],
             solid_rot=gal_params['solid_rot'][i],
-            skewness=gal_params['skewness'][i])
+            skewness=gal_params['skewness'][i],
+            linemodel=linemodel)
         specs.append(spectrum.spectrum)
 
     specs = np.array(specs)
 
-    print(velocity_grid)
-    print(v_rad)
-    print(np.argmax(specs, 1))
     return specs
 
 
@@ -45,9 +46,9 @@ class Spectrum(object):
     def __init__(
             self,
             lon, lat, velos,
-            velo_center, flux, v_rot, turb_velo, solid_rot, skewness):
+            velo_center, flux, v_rot, turb_velo, solid_rot, skewness,
+            linemodel):
 
-        self.velos = velos
         self.velo_center = velo_center
         self.flux = flux
         self.logflux = np.log10(self.flux)
@@ -55,12 +56,7 @@ class Spectrum(object):
         self.turb_velo = turb_velo
         self.solid_rot = solid_rot
         self.skewness = skewness
-
-    @property
-    def model(self):
-        if self._model is None:
-            self._model = LineModel(self.velos, n_disks=1, n_baseline=0)
-        return self._model
+        self.model = linemodel
 
     @property
     def shape_parameters(self):
