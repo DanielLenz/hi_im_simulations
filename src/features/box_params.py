@@ -28,7 +28,7 @@ def create_header(box):
 
     header['CRVAL1'] = box['ra_min'].value
     header['CRVAL2'] = box['dec_min'].value
-    header['CRVAL3'] = box['nus'][0].value
+    header['CRVAL3'] = box['nu_grid'][0].value
     header['LATPOLE'] = 90.
 
     header['CTYPE1'] = 'RA---SFL'
@@ -64,13 +64,13 @@ def get_test_params():
     delta_nu = bandwidth / n_channels  # spacing in frequency
 
     # get frequencies, high to low freqs, meaning increasing redshift
-    nus = np.linspace(
+    nu_grid = np.linspace(
         nu_start.to(u.Hz).value,
         (nu_start - n_channels * delta_nu).to(u.Hz).value,
         n_channels) * u.Hz
 
     # convert to v_lsr in km/s
-    velocity_grid = nus.to(u.km / u.s, equivalencies=P.HI_VFRAME)
+    velocity_grid = nu_grid.to(u.km / u.s, equivalencies=P.HI_VFRAME)
     delta_v = velocity_grid[1] - velocity_grid[0]
 
     params = dict(
@@ -89,7 +89,7 @@ def get_test_params():
         n_channels=n_channels,
         delta_nu=delta_nu,
         delta_v=delta_v,
-        nus=nus,
+        nu_grid=nu_grid,
         velocity_grid=velocity_grid
     )
 

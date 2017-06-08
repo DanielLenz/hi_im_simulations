@@ -1,7 +1,36 @@
+from astropy.io import fits
 import numpy as np
 
+from src import utils as ut
 
-def get_test_clustering(ra_range, dec_range, v_range, n_samples):
+
+def load_clustering(infile):
+
+    # load catalogue
+    cat = fits.getdata(infile)
+
+    # extract positions and masses
+    ras = cat['ra']
+    decs = cat['dec']
+    zs = cat['z']
+
+    n_samples = zs.shape[0]
+
+    # frequencies in MHz
+    nus = ut.z2nu(zs).to(u.MHz).value
+
+    # in km/s
+    velos = nus.to(u.km / u.s, equivalencies=P.HI_VFRAME)
+
+    locations = dict(
+        ras=ras,
+        decs=decs,
+        nus=nus,
+        velos=velos,
+        n_samples=n_samples)
+
+
+def get_test_clustering(ra_range, dec_range, nu_range, n_samples):
 
     # ras in degree
     ras = np.random.uniform(
@@ -15,15 +44,19 @@ def get_test_clustering(ra_range, dec_range, v_range, n_samples):
         high=dec_range[1],
         size=n_samples)
 
-    # velocities in km/s
-    velos = np.random.uniform(
-        low=v_range[0],
-        high=v_range[1],
+    # frequencies in MHz
+    nus = np.random.uniform(
+        low=nu_range[0],
+        high=nu_range[1],
         size=n_samples)
+
+    # in km/s
+    velos = nus.to(u.km / u.s, equivalencies=P.HI_VFRAME)
 
     locations = dict(
         ras=ras,
         decs=decs,
+        nus=nus,
         velos=velos,
         n_samples=n_samples)
 

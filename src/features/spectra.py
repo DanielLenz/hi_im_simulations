@@ -9,21 +9,17 @@ import cygrid as cg
 from lineprofile.model import LineModel
 
 
-def generate_spectra(gal_params, ra, dec, velocity_grid, v_rad):
+def generate_spectra(gal_params, ra, dec, velo_grid, velo_centers):
     n_samples = len(ra)
-    # print(gal_params)
-    # print(ra, dec, velocity_grid, v_rad)
-    # return
 
-    linemodel = LineModel(velocity_grid, n_disks=1, n_baseline=0)
+    linemodel = LineModel(velo_grid, n_disks=1, n_baseline=0)
 
     specs = []
     for i in range(n_samples):
         spectrum = Spectrum(
             lon=ra[i],
             lat=dec[i],
-            velos=velocity_grid,
-            velo_center=v_rad[i],
+            velo_center=velo_centers[i],
             flux=gal_params['flux'][i],
             v_rot=gal_params['v_rot'][i],
             turb_velo=gal_params['turb_velo'][i],
@@ -45,7 +41,7 @@ class Spectrum(object):
 
     def __init__(
             self,
-            lon, lat, velos,
+            lon, lat,
             velo_center, flux, v_rot, turb_velo, solid_rot, skewness,
             linemodel):
 

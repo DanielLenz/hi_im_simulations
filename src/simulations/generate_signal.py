@@ -32,8 +32,8 @@ def generate_catalogue(
         gal_priors,
         ra=locations['ras'],
         dec=locations['decs'],
-        velocity_grid=box['velocity_grid'].value,
-        v_rad=locations['velos'])
+        velocity_grid=box['nu_grid'].value,
+        velo_centers=locations['nus'])
 
     catalogue = create_FITStable(
         ras=locations['ras'],
@@ -85,9 +85,9 @@ def main():
         dec_range=[
             (box['dec_min'] - box['d_dec']).value,
             (box['dec_max'] + box['d_dec']).value],
-        v_range=[
-            (box['velocity_grid'][0]).value,
-            (box['velocity_grid'][-1]).value],
+        nu_range=[
+            (box['nu_grid'][0]).value,
+            (box['nu_grid'][-1]).value],
         n_samples=n_samples)
 
     signal, catalogue = generate_signal(

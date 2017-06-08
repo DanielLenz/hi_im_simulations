@@ -5,11 +5,15 @@ from scipy import stats
 def get_stewart2014(velocities, n_samples=1):
 
     # rotation velocities
-    class v_rot_rv(stats.rv_continuous):
-        def _pdf(self, x):
-            return (
-                np.exp(-0.5 * ((np.log10(x) - 2.2) / 0.3)**2.) /
-                (0.3 * np.log(10.) * np.sqrt(2. * np.pi)))
+
+    # skewness, has to be within [-1, 1]
+
+    # flux densities in Jy.km/s
+
+    # turbulent broadening in km/s
+
+    # fraction of solid body rotation, must be between 0 and 1
+
 
     gal_params = dict(
         v_rot=eff_rot_velos,
