@@ -30,13 +30,43 @@ def K2Jy(T, theta, lam):
     return T / Jy2K(1., theta, lam)
 
 
-def HImass2flux(S, D):
+def flux2HImass(S, D):
     """
-    S: Flux in Jy km/s
-    D: Distance in Mpc
-    returns: HI mass in solar masses
+    Converts observed fluxes into HI masses, depending on the distance
+
+    Inputs
+    ------
+    S : float or ndarray
+        Flux in Jy km/s
+    D : float
+        Distance in Mpc
+    Returns
+    -------
+    HI mass in solar masses
+
     """
-    return 2.36e5 * D**2 * S
+    M_HI = 2.36e5 * D**2 * S
+
+    return M_HI
+
+
+def HImass2flux(M, D):
+    """
+    Converts HI masses into observed fluxes, depending on the distance
+    Inputs
+    ------
+    M : float or ndarray
+        HI mass in solar masses
+    D : float
+        Distance in Mpc
+    Returns
+    -------
+    Flux in Jy km/s
+
+    """
+    S = M_HI / 2.36e5 / D**2
+
+    return S
 
 
 # redshift-frequency conversion
